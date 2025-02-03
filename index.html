@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Camera Capture with Tailwind</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+  
+  <div class="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
+    <h2 class="text-lg font-bold mb-4">Capture Photo</h2>
+
+    <!-- Video Preview (Live Camera) -->
+    <div id="cameraView" class="relative">
+      <video id="video" class="w-full rounded-md shadow-md" autoplay></video>
+    </div>
+
+    <!-- Captured Image Preview (Hidden Initially) -->
+    <div id="photoPreview" class="hidden relative">
+      <img id="capturedImage" class="w-full rounded-md shadow-md" />
+    </div>
+
+    <!-- Buttons -->
+    <div class="mt-4 space-x-2">
+      <button id="captureBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
+        Capture
+      </button>
+      <button id="editBtn" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition hidden">
+        Edit
+      </button>
+      <button id="submitBtn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition hidden">
+        Submit
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Camera Elements
+    const video = document.getElementById("video");
+    const captureBtn = document.getElementById("captureBtn");
+    const editBtn = document.getElementById("editBtn");
+    const submitBtn = document.getElementById("submitBtn");
+    const cameraView = document.getElementById("cameraView");
+    const photoPreview = document.getElementById("photoPreview");
+    const capturedImage = document.getElementById("capturedImage");
+
+    // Start Camera
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      })
+      .catch(err => console.error("Camera access denied:", err));
+
+    // Capture Photo
+    captureBtn.addEventListener("click", () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      capturedImage.src = canvas.toDataURL("image/png");
+      photoPreview.classList.remove("hidden");
+      cameraView.classList.add("hidden");
+      captureBtn.classList.add("hidden");
+      editBtn.classList.remove("hidden");
+      submitBtn.classList.remove("hidden");
+    });
+
+    // Edit (Retake)
+    editBtn.addEventListener("click", () => {
+      photoPreview.classList.add("hidden");
+      cameraView.classList.remove("hidden");
+      captureBtn.classList.remove("hidden");
+      editBtn.classList.add("hidden");
+      submitBtn.classList.add("hidden");
+    });
+
+    // Submit Button (For demonstration purposes)
+    submitBtn.addEventListener("click", () => {
+      alert("Photo submitted!");
+    });
+  </script>
+
+</body>
+</html>
