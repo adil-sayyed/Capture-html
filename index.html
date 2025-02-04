@@ -3,56 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Camera Capture with Tailwind</title>
+  <title>Passport Scan & Upload</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.0.2/tesseract.min.js"></script>
 </head>
 <body class="flex items-center justify-center min-h-screen bg-gray-100">
   
-  <div class="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
-    <h2 class="text-lg font-bold mb-4">Capture Photo</h2>
-
-    <!-- Video Preview (Live Camera) -->
-    <div id="cameraView" class="relative">
-      <video id="video" class="w-full rounded-md shadow-md" autoplay></video>
+  <div class="bg-white p-6 rounded-lg shadow-lg w-3/4 flex">
+    <!-- Left Section: Capture & Upload -->
+    <div class="w-1/2 p-4 border-r">
+      <h2 class="text-lg font-bold mb-4 text-center">Upload or Capture Passport</h2>
+      
+      <div id="cameraView" class="relative">
+        <video id="video" class="w-full rounded-md shadow-md" autoplay></video>
+      </div>
+      
+      <div id="photoPreview" class="hidden relative">
+        <img id="capturedImage" class="w-full rounded-md shadow-md" />
+      </div>
+      
+      <div class="mt-4 space-x-2 text-center">
+        <button id="captureBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">Capture</button>
+        <button id="uploadBtn" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 transition">Upload</button>
+        <button id="editBtn" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition hidden">Edit</button>
+        <button id="submitBtn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition hidden">Submit</button>
+      </div>
+      
+      <input type="file" id="fileInput" class="hidden" accept="image/*">
     </div>
-
-    <!-- Captured Image Preview (Hidden Initially) -->
-    <div id="photoPreview" class="hidden relative">
-      <img id="capturedImage" class="w-full rounded-md shadow-md" />
-    </div>
-
-    <!-- Buttons -->
-    <div class="mt-4 space-x-2">
-      <button id="captureBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
-        Capture
-      </button>
-      <button id="editBtn" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition hidden">
-        Edit
-      </button>
-      <button id="submitBtn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition hidden">
-        Submit
-      </button>
+    
+    <!-- Right Section: Table -->
+    <div class="w-1/2 p-4">
+      <h2 class="text-lg font-bold mb-4 text-center">Extracted Passport Details</h2>
+      <table class="w-full border-collapse border border-gray-300">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border p-2">Field</th>
+            <th class="border p-2">Value</th>
+          </tr>
+        </thead>
+        <tbody id="recordsTable"></tbody>
+      </table>
     </div>
   </div>
 
   <script>
-    // Camera Elements
     const video = document.getElementById("video");
     const captureBtn = document.getElementById("captureBtn");
+    const uploadBtn = document.getElementById("uploadBtn");
     const editBtn = document.getElementById("editBtn");
     const submitBtn = document.getElementById("submitBtn");
     const cameraView = document.getElementById("cameraView");
     const photoPreview = document.getElementById("photoPreview");
     const capturedImage = document.getElementById("capturedImage");
+    const fileInput = document.getElementById("fileInput");
+    const recordsTable = document.getElementById("recordsTable");
 
-    // Start Camera
     navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
-        video.srcObject = stream;
-      })
+      .then(stream => { video.srcObject = stream; })
       .catch(err => console.error("Camera access denied:", err));
 
-    // Capture Photo
     captureBtn.addEventListener("click", () => {
       const canvas = document.createElement("canvas");
       canvas.width = video.videoWidth;
@@ -61,27 +71,90 @@
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       
       capturedImage.src = canvas.toDataURL("image/png");
+      showPreview();
+      extractText(capturedImage.src);
+    });
+
+    uploadBtn.addEventListener("click", () => { fileInput.click(); });
+
+    fileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          capturedImage.src = e.target.result;
+          showPreview();
+          extractText(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function showPreview() {
       photoPreview.classList.remove("hidden");
       cameraView.classList.add("hidden");
       captureBtn.classList.add("hidden");
+      uploadBtn.classList.add("hidden");
       editBtn.classList.remove("hidden");
       submitBtn.classList.remove("hidden");
-    });
+    }
 
-    // Edit (Retake)
     editBtn.addEventListener("click", () => {
       photoPreview.classList.add("hidden");
       cameraView.classList.remove("hidden");
       captureBtn.classList.remove("hidden");
+      uploadBtn.classList.remove("hidden");
       editBtn.classList.add("hidden");
       submitBtn.classList.add("hidden");
     });
 
-    // Submit Button (For demonstration purposes)
     submitBtn.addEventListener("click", () => {
-      alert("Photo submitted!");
+      alert("Passport details submitted successfully!");
+      editBtn.click();
     });
-  </script>
 
+    function extractText(imageSrc) {
+      Tesseract.recognize(
+        imageSrc,
+        'eng',
+        { logger: m => console.log(m) }
+      ).then(({ data: { text } }) => {
+        const extractedData = parsePassportText(text);
+        populateTable(extractedData);
+      });
+    }
+
+    function parsePassportText(text) {
+      const data = {
+        "Full Name": "Unknown",
+        "Date of Birth": "Unknown",
+        "Place of Birth": "Unknown",
+        "Gender": "Unknown",
+        "Nationality": "Unknown",
+        "Passport Number": "Unknown",
+        "Date of Issue": "Unknown",
+        "Date of Expiry": "Unknown",
+        "Issuing Authority": "Unknown"
+      };
+
+      const lines = text.split('\n');
+      lines.forEach(line => {
+        if (line.includes("Name")) data["Full Name"] = line.split(":")[1]?.trim() || "Unknown";
+        if (line.includes("DOB")) data["Date of Birth"] = line.split(":")[1]?.trim() || "Unknown";
+        if (line.includes("Place")) data["Place of Birth"] = line.split(":")[1]?.trim() || "Unknown";
+        if (line.includes("Gender")) data["Gender"] = line.split(":")[1]?.trim() || "Unknown";
+        if (line.includes("Nationality")) data["Nationality"] = line.split(":")[1]?.trim() || "Unknown";
+        if (line.includes("Passport No")) data["Passport Number"] = line.split(":")[1]?.trim() || "Unknown";
+      });
+
+      return data;
+    }
+
+    function populateTable(data) {
+      recordsTable.innerHTML = Object.entries(data).map(([key, value]) => `
+        <tr><td class='border p-2'>${key}</td><td class='border p-2'>${value}</td></tr>
+      `).join('');
+    }
+  </script>
 </body>
 </html>
