@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Passport Scan & Upload</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.0.2/tesseract.min.js"></script>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+  
+  <div class="bg-white p-6 rounded-lg shadow-lg w-3/4 flex">
+    <!-- Left Section: Capture & Upload -->
+    <div class="w-1/2 p-4 border-r">
+      <h2 class="text-lg font-bold mb-4 text-center">Upload or Capture Passport</h2>
+      
+      <div id="cameraView" class="relative">
+        <video id="video" class="w-full rounded-md shadow-md" autoplay></video>
+      </div>
+      
+      <div id="photoPreview" class="hidden relative">
+        <img id="capturedImage" class="w-full rounded-md shadow-md" />
+      </div>
+      
+      <div class="mt-4 space-x-2 text-center">
+        <button id="captureBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">Capture</button>
+        <button id="uploadBtn" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 transition">Upload</button>
+      </div>
+      
+      <input type="file" id="fileInput" class="hidden" accept="image/*">
+    </div>
+    
+    <!-- Right Section: Table -->
+    <div class="w-1/2 p-4">
+      <h2 class="text-lg font-bold mb-4 text-center">Extracted Passport Details</h2>
+      <table class="w-full border-collapse border border-gray-300 hidden" id="dataTable">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border p-2">Field</th>
+            <th class="border p-2">Value</th>
+          </tr>
+        </thead>
+        <tbody id="recordsTable"></tbody>
+      </table>
+
+      <!-- Change and Save Buttons -->
+      <div class="mt-4 text-center space-x-4 hidden" id="buttons">
+        <button id="changeBtn" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition">Change</button>
+        <button id="saveBtn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const video = document.getElementById("video");
+    const captureBtn = document.getElementById("captureBtn");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const changeBtn = document.getElementById("changeBtn");
+    const saveBtn = document.getElementById("saveBtn");
+    const fileInput = document.getElementById("fileInput");
+    const recordsTable = document.getElementById("recordsTable");
+    const dataTable = document.getElementById("dataTable");
+    const buttons = document.getElementById("buttons");
+
+    let isEditing = false; // Track whether fields are in edit mode
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => { video.srcObject = stream; })
+      .catch(err => console.error("Camera access denied:", err));
+
+    captureBtn.addEventListener("click", () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      const capturedImage = canvas.toDataURL("image/png");
+      extractText(capturedImage);
+    });
+
+    uploadBtn.addEventListener("click", () => { fileInput.click(); });
+
+    fileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const capturedImage = e.target.result;
+          extractText(capturedImage);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function extractText(imageSrc) {
+      Tesseract.recognize(
+        imageSrc,
+        'eng',
+        { logger: m => console.log(m) }
+      ).then(({ data: { text } }) => {
+        const extractedData = parsePassportText(text);
+        populateTable(extractedData);
+        dataTable.classList.remove("hidden");
+        buttons.classList.remove("hidden");
+      });
+    }
+
+    function parsePassportText(text) {
+      const data = {
+        "Full Name": "Unknown",
+        "Date of Birth": "Unknown",
+        "Place of Birth": "Unknown",
+        "Gender": "Unknown",
+        "Nationality": "Unknown",
+        "Passport Number": "Unknown",
+        "Date of Issue": "Unknown",
+        "Date of Expiry": "Unknown",
+        "Issuing Authority": "Unknown"
+      };
+
+      const lines = text.split('\n');
+      lines.forEach(line => {
+        if (line.includes("Name")) data["Full Name"] = line.split(":")[1]?.trim() || "Unknown";
+        if (line.includes("DOB")) data["Date of Birth"] = line.split(":")[1]?.trim() || "Unknown";
+        if (line.includes("Place")) data["Place of Birth"] = line.split(":")[1]?.trim() || "Unknown";
+        if (line.includes("Gender")) data["Gender"] = line.split(":")[1]?.trim() || "Unknown";
+        if (line.includes("Nationality")) data["Nationality"] = line.split(":")[1]?.trim() || "Unknown";
+        if (line.includes("Passport No")) data["Passport Number"] = line.split(":")[1]?.trim() || "Unknown";
+      });
+
+      return data;
+    }
+
+    function populateTable(data) {
+      recordsTable.innerHTML = Object.entries(data).map(([key, value]) => `
+        <tr>
+          <td class='border p-2'>${key}</td>
+          <td class='border p-2'>
+            <input type="text" class="w-full p-1 border rounded" value="${value}" ${isEditing ? '' : 'readonly'}>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    changeBtn.addEventListener("click", () => {
+      isEditing = true; // Enable editing mode
+
+      // Show Save button, hide Change button
+      changeBtn.classList.add("hidden");
+      saveBtn.classList.remove("hidden");
+
+      // Re-populate the table with editable fields
+      const data = Array.from(recordsTable.querySelectorAll('input')).map(input => input.value);
+      const fields = [
+        "Full Name", "Date of Birth", "Place of Birth", "Gender", "Nationality", 
+        "Passport Number", "Date of Issue", "Date of Expiry", "Issuing Authority"
+      ];
+      const dataObj = fields.reduce((acc, field, index) => {
+        acc[field] = data[index] || "Unknown";
+        return acc;
+      }, {});
+      populateTable(dataObj);
+    });
+
+    saveBtn.addEventListener("click", () => {
+      isEditing = false; // Disable editing mode
+
+      // Hide Save button, show Change button
+      saveBtn.classList.add("hidden");
+      changeBtn.classList.remove("hidden");
+
+      // Save the data and populate the table with non-editable fields
+      const data = Array.from(recordsTable.querySelectorAll('input')).map(input => input.value);
+      const fields = [
+        "Full Name", "Date of Birth", "Place of Birth", "Gender", "Nationality", 
+        "Passport Number", "Date of Issue", "Date of Expiry", "Issuing Authority"
+      ];
+      const dataObj = fields.reduce((acc, field, index) => {
+        acc[field] = data[index] || "Unknown";
+        return acc;
+      }, {});
+      populateTable(dataObj);
+    });
+  </script>
+</body>
+</html>
