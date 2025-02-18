@@ -7,497 +7,490 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.0.2/tesseract.min.js"></script>
 </head>
-<body class="flex items-center justify-center min-h-screen bg-gray-100">
+<body>
   
-  <div class="bg-white p-6 rounded-lg shadow-lg w-3/4 flex flex-col gap-6">
-    <div class=" flex justify-center items-center font-bold text-3xl">
-      Medicine 
+  <div class="flex">
+    <!-- Sidebar (Fixed) -->
+    <div class="w-64 bg-gray-900 h-screen text-white p-5 space-y-6 fixed">
+        <h2 class="text-2xl font-bold flex items-center justify-center">Demo</h2>
+        <nav>
+            <a href="index.html" class="block py-2 px-4 rounded hover:bg-gray-700">Medicine 💊</a>
+            <a href="pharmacy.html" class="block py-2 px-4 rounded hover:bg-gray-700">Pharmacy 🏥</a>
+            <a href="#" class="block py-2 px-4 rounded hover:bg-gray-700">Ticket 🎫</a>
+        </nav>
     </div>
+    <!-- Main Content -->
+    <div class="ml-64 w-full h-screen overflow-auto p-6">
+      <div class="bg-white p-6 rounded shadow-md">
+        
+        <div class="py-2">
+          <div class=" flex justify-center py-2 items-center font-bold text-3xl">
+            Medicine 
+          </div>
+          
+          <div class="flex w-full">
+            <div class="w-2/4 p-4 border-r">
+              <h2 class="text-lg font-normal mb-4 text-center">Upload or Capture Medicine Picture Front Side</h2>
+              <div id="cameraViewFront" class="relative">
+                <video id="videoFront" class="w-full rounded-md shadow-md" autoplay></video>
+              </div>
+              <div id="photoPreviewFront" class="hidden relative">
+                <img id="capturedImageFront" class="w-full rounded-md shadow-md" />
+              </div>
+              <div class="mt-4 space-x-2 text-center">
+                <button id="captureBtnFront" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">Capture</button>
+                <button id="uploadBtnFront" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 transition">Upload</button>
+                <button id="editBtnFront" class="bg-yellow-500 text-white px-8 py-2 rounded-md hover:bg-yellow-600 transition hidden">Edit</button>
+              </div>
+              <input type="file" id="fileInputFront" class="hidden" accept="image/*">
+            </div>
+      
+            <div class="w-2/4 p-4">
+              <h2 class="text-lg font-normal mb-4 text-center">Upload or Capture Medicine Picture Back Side</h2>
+              <div id="cameraViewBack" class="relative">
+                <video id="videoBack" class="w-full rounded-md shadow-md" autoplay></video>
+              </div>
+              <div id="photoPreviewBack" class="hidden relative">
+                <img id="capturedImageBack" class="w-full rounded-md shadow-md" />
+              </div>
+              <div class="mt-4 space-x-2 text-center">
+                <button id="captureBtnBack" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">Capture</button>
+                <button id="uploadBtnBack" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 transition">Upload</button>
+                <button id="editBtnBack" class="bg-yellow-500 text-white px-8 py-2 rounded-md hover:bg-yellow-600 transition hidden">Edit</button>
+              </div>
+              <input type="file" id="fileInputBack" class="hidden" accept="image/*">
+            </div>
+          </div>
+      
+          <div class="text-center">
+            <button id="submitBtn" class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition text-lg">
+              Submit
+            </button>
+          </div>
+        </div>
     
-    <div class="flex w-full">
-      <div class="w-1/2 p-4 border-r">
-        <h2 class="text-lg font-normal mb-4 text-center">Upload or Capture Medicine Picture Front Side</h2>
-        <div id="cameraViewFront" class="relative">
-          <video id="videoFront" class="w-full rounded-md shadow-md" autoplay></video>
+    
+        <div class="hidden" id="maindiv">
+          <div class="overflow-y-auto">
+            <!-- Notepad-style OCR Output -->
+            <div class="py-4 px-4">
+              <div class="flex items-center gap-6">
+                <h3>OCR Text data</h3>
+              <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="notepadToggle" class="sr-only peer">
+                  <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600">
+                  </div>
+              </label>
+              </div>
+              <div id="notepad" class="hidden bg-white p-4 mt-6 rounded-lg shadow-md w-full">
+                  <h2 class="text-lg font-bold mb-2">OCR Text data</h2>
+                  <textarea id="ocrText" class="w-full h-32 border p-2" readonly></textarea>
+              </div>
+            </div>
+        
+            <!-- Webform Data table -->
+            <div class="py-4 px-4">
+              <div class="flex items-center gap-6">
+                <h3>Webform Table Data</h3>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="webformToggle" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600">
+                    </div>
+                </label>
+              </div>
+                <div id="structuredTable" class="hidden bg-white p-6 rounded-lg shadow-md w-full">
+                  <h2 class="text-lg font-bold mb-2">Webform Table Data</h2>
+                  <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-300">
+                      <tbody>
+                        <!-- Table Headers as Row Titles -->
+                        <tr class="bg-gray-200">
+                          <th class="border border-gray-300 px-4 py-2">Medicine Name</th>
+                          <td class="border border-gray-300 px-4 py-2">Sample</td>
+                          <td class="border border-gray-300 px-4 py-2">Sample</td>
+                        </tr>
+                        <tr>
+                          <th class="border border-gray-300 px-4 py-2">Medicine Type</th>
+                          <td class="border border-gray-300 px-4 py-2">Tablet</td>
+                          <td class="border border-gray-300 px-4 py-2">Tablet</td>
+                        </tr>
+                        <tr>
+                          <th class="border border-gray-300 px-4 py-2">Compound Name</th>
+                          <td class="border border-gray-300 px-4 py-2">Paracetamol</td>
+                          <td class="border border-gray-300 px-4 py-2">Ibuprofen </td>
+                        </tr>
+                        <tr>
+                          <th class="border border-gray-300 px-4 py-2">Composition</th>
+                          <td class="border border-gray-300 px-4 py-2">500mg</td>
+                          <td class="border border-gray-300 px-4 py-2">700mg</td>
+                        </tr>
+                        <tr>
+                          <th class="border border-gray-300 px-4 py-2">Strength/Dosage</th>
+                          <td class="border border-gray-300 px-4 py-2">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2">Oral</td>
+                        </tr>
+                        <tr>
+                          <th class="border border-gray-300 px-4 py-2">Formulation</th>
+                          <td class="border border-gray-300 px-4 py-2">Solid</td>
+                          <td class="border border-gray-300 px-4 py-2">Solid</td>
+                        </tr>
+                        <tr>
+                          <th class="border border-gray-300 px-4 py-2">Molecular Weight (g/mol)</th>
+                          <td class="border border-gray-300 px-4 py-2">151.16</td>
+                          <td class="border border-gray-300 px-4 py-2">160.60</td>
+                        </tr>
+                        <tr>
+                          <th class="border border-gray-300 px-4 py-2">Solubility</th>
+                          <td class="border border-gray-300 px-4 py-2">Water</td>
+                          <td class="border border-gray-300 px-4 py-2">Water</td>
+                        </tr>
+                        <tr>
+                          <th class="border border-gray-300 px-4 py-2">Cost</th>
+                          <td class="border border-gray-300 px-4 py-2">$10</td>
+                          <td class="border border-gray-300 px-4 py-2">$10</td>
+                        </tr>
+                        <tr>
+                          <th class="border border-gray-300 px-4 py-2">Batch No.</th>
+                          <td class="border border-gray-300 px-4 py-2">B12345</td>
+                          <td class="border border-gray-300 px-4 py-2">B12345</td>
+                        </tr>
+                        <tr>
+                          <th class="border border-gray-300 px-4 py-2">Exp Date</th>
+                          <td class="border border-gray-300 px-4 py-2">12/2025</td>
+                          <td class="border border-gray-300 px-4 py-2">12/2025</td>
+                        </tr>
+                        <tr>
+                          <th class="border border-gray-300 px-4 py-2">Manufacturer Company</th>
+                          <td class="border border-gray-300 px-4 py-2">Pharma Inc.</td>
+                          <td class="border border-gray-300 px-4 py-2">Pharma Inc.</td>
+                        </tr>
+                        <tr>
+                          <th class="border border-gray-300 px-4 py-2">Actions</th>
+                          <td class="border border-gray-300 px-4 py-2">
+                            <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
+                            <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
+                          </td>
+                          <td class="border border-gray-300 px-4 py-2">
+                            <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
+                            <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+            </div>
+          
+            <!-- Excel Data Table -->
+            <div class="py-4 px-4">
+              <div class="flex items-center gap-6">
+                <h3>Excel Table Data</h3>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="excelToggle" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600">
+                    </div>
+                </label>
+              </div>
+                <div id="secondTable" class="hidden bg-white p-6 rounded-lg shadow-md w-full mt-6">
+                  <h2 class="text-lg font-bold mb-2">Excel Table Data</h2>
+                  <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-300">
+                      <thead>
+                        <tr class="bg-gray-200">
+                          <th class="border border-gray-300 px-4 py-2">Medicine Name</th>
+                      <th class="border border-gray-300 px-4 py-2">Medicine Type</th>
+                      <th class="border border-gray-300 px-4 py-2">Compound Name</th>
+                      <th class="border border-gray-300 px-4 py-2">Composition</th>
+                      <th class="border border-gray-300 px-4 py-2">Strength/Dosage</th>
+                      <th class="border border-gray-300 px-4 py-2">Formulation</th>
+                      <th class="border border-gray-300 px-4 py-2">Molecular Weight (g/mol)</th>
+                      <th class="border border-gray-300 px-4 py-2">Solubility</th>
+                      <th class="border border-gray-300 px-4 py-2">Cost</th>
+                      <th class="border border-gray-300 px-4 py-2">Batch No.</th>
+                      <th class="border border-gray-300 px-4 py-2">Mfg Date</th>
+                      <th class="border border-gray-300 px-4 py-2">Exp Date</th>
+                      <th class="border border-gray-300 px-4 py-2">Manufacturer Company</th>
+                      <th class="border border-gray-300 px-4 py-2">Company Address</th>
+                      <th class="border border-gray-300 px-4 py-2">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
+                          <td class="border border-gray-300 px-4 py-2">
+                            <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
+                            <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
+                          <td class="border border-gray-300 px-4 py-2">
+                            <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
+                            <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
+                          <td class="border border-gray-300 px-4 py-2">
+                            <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
+                            <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
+                          <td class="border border-gray-300 px-4 py-2">
+                            <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
+                            <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
+                          <td class="border border-gray-300 px-4 py-2">
+                            <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
+                            <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+            </div>
+          
+            <!-- API Data table -->
+            <div class="py-4 px-4">
+              <div class="flex items-center gap-6">
+                <h3>API Table Data</h3>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="apiToggle" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600">
+                    </div>
+                </label>
+              </div>
+                <div id="thirdTable" class="hidden bg-white p-6 rounded-lg shadow-md w-full mt-6">
+                  <h2 class="text-lg font-bold mb-2">API Table Data</h2>
+                  <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-300">
+                      <thead>
+                        <tr class="bg-gray-200">
+                          <th class="border border-gray-300 px-4 py-2">Medicine Name</th>
+                      <th class="border border-gray-300 px-4 py-2">Medicine Type</th>
+                      <th class="border border-gray-300 px-4 py-2">Compound Name</th>
+                      <th class="border border-gray-300 px-4 py-2">Composition</th>
+                      <th class="border border-gray-300 px-4 py-2">Half-Life</th>
+                      <th class="border border-gray-300 px-4 py-2">Bioavailability (%)</th>
+                      <th class="border border-gray-300 px-4 py-2">Route of Administration</th>
+                      <th class="border border-gray-300 px-4 py-2">Common Use</th>
+                      <th class="border border-gray-300 px-4 py-2">Strength/Dosage</th>
+                      <th class="border border-gray-300 px-4 py-2">Formulation</th>
+                      <th class="border border-gray-300 px-4 py-2">Molecular Weight (g/mol)</th>
+                      <th class="border border-gray-300 px-4 py-2">Solubility</th>
+                      <th class="border border-gray-300 px-4 py-2">Cost</th>
+                      <th class="border border-gray-300 px-4 py-2">Batch No.</th>
+                      <th class="border border-gray-300 px-4 py-2">Mfg Date</th>
+                      <th class="border border-gray-300 px-4 py-2">Exp Date</th>
+                      <th class="border border-gray-300 px-4 py-2">Manufacturer Company</th>
+                      <th class="border border-gray-300 px-4 py-2">Company Address</th>
+                      <th class="border border-gray-300 px-4 py-2">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">1-1.5 hrs</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">70-90</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Antibiotic</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
+                          <td class="border border-gray-300 px-4 py-2">
+                            <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
+                            <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">1-1.5 hrs</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">70-90</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Antibiotic</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
+                          <td class="border border-gray-300 px-4 py-2">
+                            <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
+                            <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">1-1.5 hrs</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">70-90</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Antibiotic</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
+                          <td class="border border-gray-300 px-4 py-2">
+                            <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
+                            <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">1-1.5 hrs</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">70-90</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Antibiotic</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
+                          <td class="border border-gray-300 px-4 py-2">
+                            <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
+                            <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">1-1.5 hrs</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">70-90</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Antibiotic</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
+                          <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
+                          <td class="border border-gray-300 px-4 py-2">
+                            <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
+                            <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  
+              </div>
+            </div>
+          </div>
         </div>
-        <div id="photoPreviewFront" class="hidden relative">
-          <img id="capturedImageFront" class="w-full rounded-md shadow-md" />
-        </div>
-        <div class="mt-4 space-x-2 text-center">
-          <button id="captureBtnFront" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">Capture</button>
-          <button id="uploadBtnFront" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 transition">Upload</button>
-          <button id="editBtnFront" class="bg-yellow-500 text-white px-8 py-2 rounded-md hover:bg-yellow-600 transition hidden">Edit</button>
-        </div>
-        <input type="file" id="fileInputFront" class="hidden" accept="image/*">
-      </div>
-
-      <div class="w-1/2 p-4">
-        <h2 class="text-lg font-normal mb-4 text-center">Upload or Capture Medicine Picture Back Side</h2>
-        <div id="cameraViewBack" class="relative">
-          <video id="videoBack" class="w-full rounded-md shadow-md" autoplay></video>
-        </div>
-        <div id="photoPreviewBack" class="hidden relative">
-          <img id="capturedImageBack" class="w-full rounded-md shadow-md" />
-        </div>
-        <div class="mt-4 space-x-2 text-center">
-          <button id="captureBtnBack" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">Capture</button>
-          <button id="uploadBtnBack" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 transition">Upload</button>
-          <button id="editBtnBack" class="bg-yellow-500 text-white px-8 py-2 rounded-md hover:bg-yellow-600 transition hidden">Edit</button>
-        </div>
-        <input type="file" id="fileInputBack" class="hidden" accept="image/*">
       </div>
     </div>
-
-    <div class="text-center">
-      <button id="submitBtn" class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition text-lg">
-        Submit
-      </button>
-    </div>
-
-
-    <div class="hidden" id="maindiv">
-      <!-- Notepad-style OCR Output -->
-      <div class="py-4 px-4">
-          <div class="flex items-center gap-6">
-            <h3>OCR Text data</h3>
-          <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="notepadToggle" class="sr-only peer">
-              <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600">
-              </div>
-          </label>
-          </div>
-          <div id="notepad" class="hidden bg-white p-4 mt-6 rounded-lg shadow-md w-full">
-              <h2 class="text-lg font-bold mb-2">OCR Text data</h2>
-              <textarea id="ocrText" class="w-full h-32 border p-2" readonly></textarea>
-          </div>
-      </div>
-  
-      <div class="py-4 px-4">
-        <div class="flex items-center gap-6">
-          <h3>Webform Table Data</h3>
-          <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="webformToggle" class="sr-only peer">
-              <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600">
-              </div>
-          </label>
-        </div>
-          <div id="structuredTable" class="hidden bg-white p-6 rounded-lg shadow-md w-full">
-            <h2 class="text-lg font-bold mb-2">Webform Table Data</h2>
-            <div class="overflow-x-auto">
-              <table class="w-full border-collapse border border-gray-300">
-                <tbody>
-                  <!-- Table Headers as Row Titles -->
-                  <tr class="bg-gray-200">
-                    <th class="border border-gray-300 px-4 py-2">Medicine Name</th>
-                    <td class="border border-gray-300 px-4 py-2">Sample</td>
-                    <td class="border border-gray-300 px-4 py-2">Sample</td>
-                  </tr>
-                  <tr>
-                    <th class="border border-gray-300 px-4 py-2">Medicine Type</th>
-                    <td class="border border-gray-300 px-4 py-2">Tablet</td>
-                    <td class="border border-gray-300 px-4 py-2">Tablet</td>
-                  </tr>
-                  <tr>
-                    <th class="border border-gray-300 px-4 py-2">Compound Name</th>
-                    <td class="border border-gray-300 px-4 py-2">Paracetamol</td>
-                    <td class="border border-gray-300 px-4 py-2">Ibuprofen </td>
-                  </tr>
-                  <tr>
-                    <th class="border border-gray-300 px-4 py-2">Composition</th>
-                    <td class="border border-gray-300 px-4 py-2">500mg</td>
-                    <td class="border border-gray-300 px-4 py-2">700mg</td>
-                  </tr>
-                  <tr>
-                    <th class="border border-gray-300 px-4 py-2">Strength/Dosage</th>
-                    <td class="border border-gray-300 px-4 py-2">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2">Oral</td>
-                  </tr>
-                  <tr>
-                    <th class="border border-gray-300 px-4 py-2">Formulation</th>
-                    <td class="border border-gray-300 px-4 py-2">Solid</td>
-                    <td class="border border-gray-300 px-4 py-2">Solid</td>
-                  </tr>
-                  <tr>
-                    <th class="border border-gray-300 px-4 py-2">Molecular Weight (g/mol)</th>
-                    <td class="border border-gray-300 px-4 py-2">151.16</td>
-                    <td class="border border-gray-300 px-4 py-2">160.60</td>
-                  </tr>
-                  <tr>
-                    <th class="border border-gray-300 px-4 py-2">Solubility</th>
-                    <td class="border border-gray-300 px-4 py-2">Water</td>
-                    <td class="border border-gray-300 px-4 py-2">Water</td>
-                  </tr>
-                  <tr>
-                    <th class="border border-gray-300 px-4 py-2">Cost</th>
-                    <td class="border border-gray-300 px-4 py-2">$10</td>
-                    <td class="border border-gray-300 px-4 py-2">$10</td>
-                  </tr>
-                  <tr>
-                    <th class="border border-gray-300 px-4 py-2">Batch No.</th>
-                    <td class="border border-gray-300 px-4 py-2">B12345</td>
-                    <td class="border border-gray-300 px-4 py-2">B12345</td>
-                  </tr>
-                  <tr>
-                    <th class="border border-gray-300 px-4 py-2">Exp Date</th>
-                    <td class="border border-gray-300 px-4 py-2">12/2025</td>
-                    <td class="border border-gray-300 px-4 py-2">12/2025</td>
-                  </tr>
-                  <tr>
-                    <th class="border border-gray-300 px-4 py-2">Manufacturer Company</th>
-                    <td class="border border-gray-300 px-4 py-2">Pharma Inc.</td>
-                    <td class="border border-gray-300 px-4 py-2">Pharma Inc.</td>
-                  </tr>
-                  <tr>
-                    <th class="border border-gray-300 px-4 py-2">Actions</th>
-                    <td class="border border-gray-300 px-4 py-2">
-                      <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
-                      <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
-                    </td>
-                    <td class="border border-gray-300 px-4 py-2">
-                      <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
-                      <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-      </div>
-  
-      <div class="py-4 px-4">
-        <div class="flex items-center gap-6">
-          <h3>Excel Table Data</h3>
-          <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="excelToggle" class="sr-only peer">
-              <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600">
-              </div>
-          </label>
-        </div>
-          <div id="secondTable" class="hidden bg-white p-6 rounded-lg shadow-md w-full mt-6">
-            <h2 class="text-lg font-bold mb-2">Excel Table Data</h2>
-            <div class="overflow-x-auto">
-              <table class="w-full border-collapse border border-gray-300">
-                <thead>
-                  <tr class="bg-gray-200">
-                    <th class="border border-gray-300 px-4 py-2">Medicine Name</th>
-                <th class="border border-gray-300 px-4 py-2">Medicine Type</th>
-                <th class="border border-gray-300 px-4 py-2">Compound Name</th>
-                <th class="border border-gray-300 px-4 py-2">Composition</th>
-                <th class="border border-gray-300 px-4 py-2">Strength/Dosage</th>
-                <th class="border border-gray-300 px-4 py-2">Formulation</th>
-                <th class="border border-gray-300 px-4 py-2">Molecular Weight (g/mol)</th>
-                <th class="border border-gray-300 px-4 py-2">Solubility</th>
-                <th class="border border-gray-300 px-4 py-2">Cost</th>
-                <th class="border border-gray-300 px-4 py-2">Batch No.</th>
-                <th class="border border-gray-300 px-4 py-2">Mfg Date</th>
-                <th class="border border-gray-300 px-4 py-2">Exp Date</th>
-                <th class="border border-gray-300 px-4 py-2">Manufacturer Company</th>
-                <th class="border border-gray-300 px-4 py-2">Company Address</th>
-                <th class="border border-gray-300 px-4 py-2">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
-                    <td class="border border-gray-300 px-4 py-2">
-                      <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
-                      <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
-                    <td class="border border-gray-300 px-4 py-2">
-                      <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
-                      <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
-                    <td class="border border-gray-300 px-4 py-2">
-                      <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
-                      <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
-                    <td class="border border-gray-300 px-4 py-2">
-                      <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
-                      <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
-                    <td class="border border-gray-300 px-4 py-2">
-                      <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
-                      <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-        </div>
-      </div>
-  
-      <div class="py-4 px-4">
-        <div class="flex items-center gap-6">
-          <h3>API Table Data</h3>
-          <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" id="apiToggle" class="sr-only peer">
-              <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600">
-              </div>
-          </label>
-        </div>
-          <div id="thirdTable" class="hidden bg-white p-6 rounded-lg shadow-md w-full mt-6">
-            <h2 class="text-lg font-bold mb-2">API Table Data</h2>
-            <div class="overflow-x-auto">
-              <table class="w-full border-collapse border border-gray-300">
-                <thead>
-                  <tr class="bg-gray-200">
-                    <th class="border border-gray-300 px-4 py-2">Medicine Name</th>
-                <th class="border border-gray-300 px-4 py-2">Medicine Type</th>
-                <th class="border border-gray-300 px-4 py-2">Compound Name</th>
-                <th class="border border-gray-300 px-4 py-2">Composition</th>
-                <th class="border border-gray-300 px-4 py-2">Half-Life</th>
-                <th class="border border-gray-300 px-4 py-2">Bioavailability (%)</th>
-                <th class="border border-gray-300 px-4 py-2">Route of Administration</th>
-                <th class="border border-gray-300 px-4 py-2">Common Use</th>
-                <th class="border border-gray-300 px-4 py-2">Strength/Dosage</th>
-                <th class="border border-gray-300 px-4 py-2">Formulation</th>
-                <th class="border border-gray-300 px-4 py-2">Molecular Weight (g/mol)</th>
-                <th class="border border-gray-300 px-4 py-2">Solubility</th>
-                <th class="border border-gray-300 px-4 py-2">Cost</th>
-                <th class="border border-gray-300 px-4 py-2">Batch No.</th>
-                <th class="border border-gray-300 px-4 py-2">Mfg Date</th>
-                <th class="border border-gray-300 px-4 py-2">Exp Date</th>
-                <th class="border border-gray-300 px-4 py-2">Manufacturer Company</th>
-                <th class="border border-gray-300 px-4 py-2">Company Address</th>
-                <th class="border border-gray-300 px-4 py-2">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">1-1.5 hrs</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">70-90</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Antibiotic</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
-                    <td class="border border-gray-300 px-4 py-2">
-                      <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
-                      <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">1-1.5 hrs</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">70-90</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Antibiotic</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
-                    <td class="border border-gray-300 px-4 py-2">
-                      <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
-                      <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">1-1.5 hrs</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">70-90</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Antibiotic</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
-                    <td class="border border-gray-300 px-4 py-2">
-                      <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
-                      <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">1-1.5 hrs</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">70-90</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Antibiotic</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
-                    <td class="border border-gray-300 px-4 py-2">
-                      <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
-                      <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Sample</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Tablet</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Paracetamol</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">500mg</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">1-1.5 hrs</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">70-90</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Antibiotic</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Oral</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Solid</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">151.16</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Water</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">$10</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">B12345</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">01/2024</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">12/2025</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">Pharma Inc.</td>
-                    <td class="border border-gray-300 px-4 py-2" contenteditable="false">New York, USA</td>
-                    <td class="border border-gray-300 px-4 py-2">
-                      <button class="edit-btn bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
-                      <button class="submit-btn bg-green-500 text-white px-2 py-1 rounded hidden">Submit</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            
-        </div>
-      </div>
   </div>
-
-
-    <!-- <div class="relative w-64 hidden" >
-        <select id="dropdownSelect" class="w-full py-2 px-3 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-0 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700">
-            <option value="">Select Anyone</option>
-            <option value="notepad">Notepad</option>
-            <option value="structuredTable">Webform</option>
-            <option value="secondTable">Excel</option>
-            <option value="thirdTable">API</option>
-        </select>
-    </div> -->
-    
-
-   
-
-    
-    
   
-  <!-- Second Table (Initially Hidden) -->
-  
-
-
-  <!-- Third Table (Initially Hidden) -->
-  
-
-  
-</div>
-
-    
-    
-  </div>
 
   
 

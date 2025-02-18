@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.0.2/tesseract.min.js"></script>
+</head>
+<body>
+    <div class="flex">
+        <div class="w-64 bg-gray-900 h-screen text-white p-5 space-y-6 fixed">
+            <h2 class="text-2xl font-bold flex items-center justify-center">Demo</h2>
+            <nav>
+                <a href="index.html" class="block py-2 px-4 rounded hover:bg-gray-700">Medicine 💊</a>
+                <a href="pharmacy.html" class="block py-2 px-4 rounded hover:bg-gray-700">Pharmacy 🏥</a>
+                <a href="check.html" class="block py-2 px-4 rounded hover:bg-gray-700">Ticket 🎫</a>
+            </nav>
+        </div>
+        
+        <div class="ml-64 w-full h-screen overflow-auto p-6">
+            <div class="bg-white p-6 rounded w-full h-screen">
+                <div class="flex justify-center py-2 items-center font-bold text-3xl">Pharmacy</div>
+                <div class="flex justify-center items-center ">
+                    <div class=" w-2/4">
+                        <div id="cameraView" class="relative">
+                            <video id="video" class="w-full rounded-md shadow-md" autoplay></video>
+                        </div>
+                        <div id="photoPreview" class="hidden relative">
+                            <img id="capturedImage" class="w-full rounded-md shadow-md" />
+                        </div>
+                        <div class="mt-4 space-x-4 flex justify-center">
+                            <button id="captureBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">Capture</button>
+                            <button id="uploadBtn" class="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600 transition">Upload File</button>
+                            <button id="editBtn" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition hidden">Edit</button>
+                            <button id="submitBtn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition hidden">Submit</button>
+                        </div>
+                        <input type="file" id="fileInput" class="hidden" accept="image/*" />
+                    </div>
+                </div>
+                <div id="tablesContainer" class="hidden mt-6">
+                    <div class="py-2">
+                        <h3 class="font-semibold">Excel Data Table</h3>
+                        <table class="table-auto w-full border-collapse border border-gray-400 m-4">
+                            <thead>
+                                <tr class="bg-gray-200">
+                                    <th class="border border-gray-400 px-2 py-1">Bill No.</th>
+                                    <th class="border border-gray-400 px-2 py-1">Date</th>
+                                    <th class="border border-gray-400 px-2 py-1">Pharmacy Name</th>
+                                    <th class="border border-gray-400 px-2 py-1">Pharmacy Address</th>
+                                    <th class="border border-gray-400 px-2 py-1">Patient Name</th>
+                                    <th class="border border-gray-400 px-2 py-1">Age</th>
+                                    <th class="border border-gray-400 px-2 py-1">Gender</th>
+                                    <th class="border border-gray-400 px-2 py-1">Doctor Name</th>
+                                    <th class="border border-gray-400 px-2 py-1">Doctor Specialization</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-gray-400 px-2 py-1">1001</td>
+                                    <td class="border border-gray-400 px-2 py-1">2/4/2025</td>
+                                    <td class="border border-gray-400 px-2 py-1">MedCare Pharmacy</td>
+                                    <td class="border border-gray-400 px-2 py-1">123 Main St, City</td>
+                                    <td class="border border-gray-400 px-2 py-1">John Doe</td>
+                                    <td class="border border-gray-400 px-2 py-1">45</td>
+                                    <td class="border border-gray-400 px-2 py-1">Male</td>
+                                    <td class="border border-gray-400 px-2 py-1">Dr. Smith</td>
+                                    <td class="border border-gray-400 px-2 py-1">General Physician</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-400 px-2 py-1">1001</td>
+                                    <td class="border border-gray-400 px-2 py-1">2/4/2025</td>
+                                    <td class="border border-gray-400 px-2 py-1">MedCare Pharmacy</td>
+                                    <td class="border border-gray-400 px-2 py-1">123 Main St, City</td>
+                                    <td class="border border-gray-400 px-2 py-1">John Doe</td>
+                                    <td class="border border-gray-400 px-2 py-1">45</td>
+                                    <td class="border border-gray-400 px-2 py-1">Male</td>
+                                    <td class="border border-gray-400 px-2 py-1">Dr. Smith</td>
+                                    <td class="border border-gray-400 px-2 py-1">General Physician</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-400 px-2 py-1">1001</td>
+                                    <td class="border border-gray-400 px-2 py-1">2/4/2025</td>
+                                    <td class="border border-gray-400 px-2 py-1">MedCare Pharmacy</td>
+                                    <td class="border border-gray-400 px-2 py-1">123 Main St, City</td>
+                                    <td class="border border-gray-400 px-2 py-1">John Doe</td>
+                                    <td class="border border-gray-400 px-2 py-1">45</td>
+                                    <td class="border border-gray-400 px-2 py-1">Male</td>
+                                    <td class="border border-gray-400 px-2 py-1">Dr. Smith</td>
+                                    <td class="border border-gray-400 px-2 py-1">General Physician</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="py-2">
+                        <h3 class="font-semibold">API Data Table</h3>
+                        <table class="table-auto w-full border-collapse border border-gray-400 mt-4">
+                            <thead>
+                                <tr class="bg-gray-200">
+                                    <th class="border border-gray-400 px-2 py-1">Medicine Type</th>
+                                    <th class="border border-gray-400 px-2 py-1">Medicine Name</th>
+                                    <th class="border border-gray-400 px-2 py-1">Compound Name</th>
+                                    <th class="border border-gray-400 px-2 py-1">Composition</th>
+                                    <th class="border border-gray-400 px-2 py-1">Strength/Dosage</th>
+                                    <th class="border border-gray-400 px-2 py-1">Formulation</th>
+                                    <th class="border border-gray-400 px-2 py-1">Quantity</th>
+                                    <th class="border border-gray-400 px-2 py-1">Price per Unit</th>
+                                    <th class="border border-gray-400 px-2 py-1">Total Price</th>
+                                    <th class="border border-gray-400 px-2 py-1">Expiry Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-gray-400 px-2 py-1">Capsule</td>
+                                    <td class="border border-gray-400 px-2 py-1">Amoxicillin</td>
+                                    <td class="border border-gray-400 px-2 py-1">Amoxicillin</td>
+                                    <td class="border border-gray-400 px-2 py-1">500 mg</td>
+                                    <td class="border border-gray-400 px-2 py-1">500 mg</td>
+                                    <td class="border border-gray-400 px-2 py-1">Hard Gelatin</td>
+                                    <td class="border border-gray-400 px-2 py-1">10</td>
+                                    <td class="border border-gray-400 px-2 py-1">$10</td>
+                                    <td class="border border-gray-400 px-2 py-1">$100</td>
+                                    <td class="border border-gray-400 px-2 py-1">2026-06</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-400 px-2 py-1">Capsule</td>
+                                    <td class="border border-gray-400 px-2 py-1">Amoxicillin</td>
+                                    <td class="border border-gray-400 px-2 py-1">Amoxicillin</td>
+                                    <td class="border border-gray-400 px-2 py-1">500 mg</td>
+                                    <td class="border border-gray-400 px-2 py-1">500 mg</td>
+                                    <td class="border border-gray-400 px-2 py-1">Hard Gelatin</td>
+                                    <td class="border border-gray-400 px-2 py-1">10</td>
+                                    <td class="border border-gray-400 px-2 py-1">$10</td>
+                                    <td class="border border-gray-400 px-2 py-1">$100</td>
+                                    <td class="border border-gray-400 px-2 py-1">2026-06</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-gray-400 px-2 py-1">Capsule</td>
+                                    <td class="border border-gray-400 px-2 py-1">Amoxicillin</td>
+                                    <td class="border border-gray-400 px-2 py-1">Amoxicillin</td>
+                                    <td class="border border-gray-400 px-2 py-1">500 mg</td>
+                                    <td class="border border-gray-400 px-2 py-1">500 mg</td>
+                                    <td class="border border-gray-400 px-2 py-1">Hard Gelatin</td>
+                                    <td class="border border-gray-400 px-2 py-1">10</td>
+                                    <td class="border border-gray-400 px-2 py-1">$10</td>
+                                    <td class="border border-gray-400 px-2 py-1">$100</td>
+                                    <td class="border border-gray-400 px-2 py-1">2026-06</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById("video");
+        const captureBtn = document.getElementById("captureBtn");
+        const editBtn = document.getElementById("editBtn");
+        const submitBtn = document.getElementById("submitBtn");
+        const cameraView = document.getElementById("cameraView");
+        const photoPreview = document.getElementById("photoPreview");
+        const capturedImage = document.getElementById("capturedImage");
+        const uploadBtn = document.getElementById("uploadBtn");
+        const fileInput = document.getElementById("fileInput");
+        const tablesContainer = document.getElementById("tablesContainer");
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(err => console.error("Camera access denied:", err));
+
+        captureBtn.addEventListener("click", () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            capturedImage.src = canvas.toDataURL("image/png");
+            photoPreview.classList.remove("hidden");
+            cameraView.classList.add("hidden");
+            captureBtn.classList.add("hidden");
+            editBtn.classList.remove("hidden");
+            submitBtn.classList.remove("hidden");
+        });
+
+        editBtn.addEventListener("click", () => {
+            photoPreview.classList.add("hidden");
+            cameraView.classList.remove("hidden");
+            captureBtn.classList.remove("hidden");
+            editBtn.classList.add("hidden");
+            submitBtn.classList.add("hidden");
+        });
+
+        submitBtn.addEventListener("click", () => {
+            tablesContainer.classList.remove("hidden");
+        });
+
+        uploadBtn.addEventListener("click", () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    capturedImage.src = reader.result;
+                    photoPreview.classList.remove("hidden");
+                    cameraView.classList.add("hidden");
+                    captureBtn.classList.add("hidden");
+                    editBtn.classList.remove("hidden");
+                    submitBtn.classList.remove("hidden");
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        document.getElementById("submitBtn").addEventListener("click", function() {
+            document.getElementById("tablesContainer").classList.remove("hidden");
+        });
+    </script>
+</body>
+</html>
