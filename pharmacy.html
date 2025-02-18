@@ -14,7 +14,7 @@
             <nav>
                 <a href="index.html" class="block py-2 px-4 rounded hover:bg-gray-700">Medicine 💊</a>
                 <a href="pharmacy.html" class="block py-2 px-4 rounded hover:bg-gray-700">Pharmacy 🏥</a>
-                <a href="check.html" class="block py-2 px-4 rounded hover:bg-gray-700">Ticket 🎫</a>
+                <a href="ticket.html" class="block py-2 px-4 rounded hover:bg-gray-700">Ticket 🎫</a>
             </nav>
         </div>
         
@@ -67,28 +67,7 @@
                                     <td class="border border-gray-400 px-2 py-1">Dr. Smith</td>
                                     <td class="border border-gray-400 px-2 py-1">General Physician</td>
                                 </tr>
-                                <tr>
-                                    <td class="border border-gray-400 px-2 py-1">1001</td>
-                                    <td class="border border-gray-400 px-2 py-1">2/4/2025</td>
-                                    <td class="border border-gray-400 px-2 py-1">MedCare Pharmacy</td>
-                                    <td class="border border-gray-400 px-2 py-1">123 Main St, City</td>
-                                    <td class="border border-gray-400 px-2 py-1">John Doe</td>
-                                    <td class="border border-gray-400 px-2 py-1">45</td>
-                                    <td class="border border-gray-400 px-2 py-1">Male</td>
-                                    <td class="border border-gray-400 px-2 py-1">Dr. Smith</td>
-                                    <td class="border border-gray-400 px-2 py-1">General Physician</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-gray-400 px-2 py-1">1001</td>
-                                    <td class="border border-gray-400 px-2 py-1">2/4/2025</td>
-                                    <td class="border border-gray-400 px-2 py-1">MedCare Pharmacy</td>
-                                    <td class="border border-gray-400 px-2 py-1">123 Main St, City</td>
-                                    <td class="border border-gray-400 px-2 py-1">John Doe</td>
-                                    <td class="border border-gray-400 px-2 py-1">45</td>
-                                    <td class="border border-gray-400 px-2 py-1">Male</td>
-                                    <td class="border border-gray-400 px-2 py-1">Dr. Smith</td>
-                                    <td class="border border-gray-400 px-2 py-1">General Physician</td>
-                                </tr>
+                               
                             </tbody>
                         </table>
                     </div>
@@ -110,30 +89,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="border border-gray-400 px-2 py-1">Capsule</td>
-                                    <td class="border border-gray-400 px-2 py-1">Amoxicillin</td>
-                                    <td class="border border-gray-400 px-2 py-1">Amoxicillin</td>
-                                    <td class="border border-gray-400 px-2 py-1">500 mg</td>
-                                    <td class="border border-gray-400 px-2 py-1">500 mg</td>
-                                    <td class="border border-gray-400 px-2 py-1">Hard Gelatin</td>
-                                    <td class="border border-gray-400 px-2 py-1">10</td>
-                                    <td class="border border-gray-400 px-2 py-1">$10</td>
-                                    <td class="border border-gray-400 px-2 py-1">$100</td>
-                                    <td class="border border-gray-400 px-2 py-1">2026-06</td>
-                                </tr>
-                                <tr>
-                                    <td class="border border-gray-400 px-2 py-1">Capsule</td>
-                                    <td class="border border-gray-400 px-2 py-1">Amoxicillin</td>
-                                    <td class="border border-gray-400 px-2 py-1">Amoxicillin</td>
-                                    <td class="border border-gray-400 px-2 py-1">500 mg</td>
-                                    <td class="border border-gray-400 px-2 py-1">500 mg</td>
-                                    <td class="border border-gray-400 px-2 py-1">Hard Gelatin</td>
-                                    <td class="border border-gray-400 px-2 py-1">10</td>
-                                    <td class="border border-gray-400 px-2 py-1">$10</td>
-                                    <td class="border border-gray-400 px-2 py-1">$100</td>
-                                    <td class="border border-gray-400 px-2 py-1">2026-06</td>
-                                </tr>
+                                
                                 <tr>
                                     <td class="border border-gray-400 px-2 py-1">Capsule</td>
                                     <td class="border border-gray-400 px-2 py-1">Amoxicillin</td>
@@ -149,6 +105,49 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="py-2">
+                        <h3 class="font-semibold">Editable & Collapsible Table</h3>
+                        <table class="table-auto w-full border-collapse border border-gray-400 mt-4">
+                            <thead>
+                                <tr class="bg-gray-200">
+                                    <th class="border px-4 py-2">
+                                        <button class="toggle-column" data-column="0">-</button> Bill No.
+                                    </th>
+                                    <th class="border px-4 py-2">
+                                        <button class="toggle-column" data-column="1">-</button> Date
+                                    </th>
+                                    <th class="border px-4 py-2">
+                                        <button class="toggle-column" data-column="2">-</button> Pharmacy Name
+                                    </th>
+                                    <th class="border px-4 py-2">
+                                        <button class="toggle-column" data-column="3">-</button> Pharmacy Address
+                                    </th>
+                                    <th class="border px-4 py-2">
+                                        <button class="toggle-column" data-column="4">-</button> Patient Name
+                                    </th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody id="editableTableBody">
+                                <tr>
+                                    <td class="border border-gray-400 px-2 py-1 text-center cursor-pointer" onclick="toggleRow(this)">+</td>
+                                    <td contenteditable="true" class="border border-gray-400 px-2 py-1">1001</td>
+                                    <td contenteditable="true" class="border border-gray-400 px-2 py-1">2/4/2025</td>
+                                    <td contenteditable="true" class="border border-gray-400 px-2 py-1">MedCare Pharmacy</td>
+                                    <td contenteditable="true" class="border border-gray-400 px-2 py-1">123 Main St, City</td>
+                                    <td contenteditable="true" class="border border-gray-400 px-2 py-1">John Doe</td>
+                                    <td contenteditable="true" class="border border-gray-400 px-2 py-1">45</td>
+                                    <td contenteditable="true" class="border border-gray-400 px-2 py-1">Male</td>
+                                    <td contenteditable="true" class="border border-gray-400 px-2 py-1">Dr. Smith</td>
+                                    <td contenteditable="true" class="border border-gray-400 px-2 py-1">General Physician</td>
+                                </tr>
+                                <tr class="hidden">
+                                    <td colspan="10" class="border border-gray-400 px-2 py-1">Additional Details...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 </div>
             </div>
             </div>
@@ -221,6 +220,23 @@
         document.getElementById("submitBtn").addEventListener("click", function() {
             document.getElementById("tablesContainer").classList.remove("hidden");
         });
+        document.querySelectorAll(".toggle-column").forEach(button => {
+        button.addEventListener("click", function () {
+            let columnIndex = this.getAttribute("data-column");
+            let table = document.querySelector("table");
+            let rows = table.querySelectorAll("tr");
+
+            rows.forEach(row => {
+                let cells = row.querySelectorAll("th, td");
+                if (cells[columnIndex]) {
+                    cells[columnIndex].classList.toggle("hidden");
+                }
+            });
+
+            // Toggle between "+" and "-"
+            this.textContent = this.textContent === "-" ? "+" : "-";
+        });
+    });
     </script>
 </body>
 </html>

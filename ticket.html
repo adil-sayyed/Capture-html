@@ -6,34 +6,50 @@
   <title>Camera Capture with Tailwind</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="flex items-center justify-center min-h-screen bg-gray-100">
-  
-  <div class="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
-    <h2 class="text-lg font-bold mb-4">Capture Photo</h2>
+<body >
 
-    <!-- Video Preview (Live Camera) -->
-    <div id="cameraView" class="relative">
-      <video id="video" class="w-full rounded-md shadow-md" autoplay></video>
+    <div class="flex">
+      <!-- Sidebar (Fixed) -->
+    <div class="w-64 bg-gray-900 h-screen text-white p-5 space-y-6 fixed">
+      <h2 class="text-2xl font-bold flex items-center justify-center">Demo</h2>
+      <nav>
+          <a href="index.html" class="block py-2 px-4 rounded hover:bg-gray-700">Medicine 💊</a>
+          <a href="pharmacy.html" class="block py-2 px-4 rounded hover:bg-gray-700">Pharmacy 🏥</a>
+          <a href="ticket.html" class="block py-2 px-4 rounded hover:bg-gray-700">Ticket 🎫</a>
+      </nav>
+    </div>
+      <!-- Main Content -->
+    <div class="ml-64 w-full h-screen overflow-auto p-6">
+      <div class="bg-white p-6 rounded shadow-md w-80 text-center">
+        <h2 class="text-lg font-bold mb-4">Capture Photo</h2>
+
+        <!-- Video Preview (Live Camera) -->
+        <div id="cameraView" class="relative">
+          <video id="video" class="w-full rounded-md shadow-md" autoplay></video>
+        </div>
+
+        <!-- Captured Image Preview (Hidden Initially) -->
+        <div id="photoPreview" class="hidden relative">
+          <img id="capturedImage" class="w-full rounded-md shadow-md" />
+        </div>
+
+        <!-- Buttons -->
+        <div class="mt-4 space-x-2">
+          <button id="captureBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
+            Capture
+          </button>
+          <button id="editBtn" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition hidden">
+            Edit
+          </button>
+          <button id="submitBtn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition hidden">
+            Submit
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- Captured Image Preview (Hidden Initially) -->
-    <div id="photoPreview" class="hidden relative">
-      <img id="capturedImage" class="w-full rounded-md shadow-md" />
     </div>
 
-    <!-- Buttons -->
-    <div class="mt-4 space-x-2">
-      <button id="captureBtn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
-        Capture
-      </button>
-      <button id="editBtn" class="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition hidden">
-        Edit
-      </button>
-      <button id="submitBtn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition hidden">
-        Submit
-      </button>
-    </div>
-  </div>
 
   <script>
     // Camera Elements
